@@ -1,0 +1,11 @@
+final testing accuracy of OSMD: 0.8217777777777778
+final testing accuracy of uniform: 0.7501111111111111
+
+Total Wallclock Time of OSMD: 2836.60(s)
+Total Wallclock Time of Uniform: 2853.08(s)
+Total Wallclock Time of DSV: 4799.12(s)
+Total Wallclock Time of FedDSV: 12570.54(s)
+
+The Spearman correlation between DSV and OSMD: 0.753 | p-value: 1.605195382946911e-19
+The Spearman correlation between DSV and uniform: 0.035 | p-value: 0.728976374760165
+The Spearman correlation between DSV and FedDSV: 0.758 | p-value: 6.266730296372351e-20
