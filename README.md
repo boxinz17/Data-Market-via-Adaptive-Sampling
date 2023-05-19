@@ -1,4 +1,4 @@
-# FL-Data-Market
+# Data-Market-via-Adaptive-Sampling
 
 Instruction to reproduce the experimental results:
 1. Run data_load.py. The code will automatically download the dataset for you.
