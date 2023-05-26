@@ -4,7 +4,7 @@ from torchvision import transforms
 from torchvision import datasets
 import pickle
 
-def data_prepare(dataset_name, n_devices, n_train, n_val, n_test, batch_size=5, rd_seed=111):
+def data_prepare(dataset_name, n_devices, n_train, n_val, n_test, batch_size=8, rd_seed=111):
     """
     Return the train_loader_list, devices_train_list, val_loader_list and devices_val_list
     based on the dataset_name.
@@ -12,10 +12,10 @@ def data_prepare(dataset_name, n_devices, n_train, n_val, n_test, batch_size=5, 
     # Input: 
     #   dataset_name: A string, should be one of
     #   {"MNIST", "KMNIST", "FMNIST"}
-    #   n_devices: Integer, number of providers
-    #   n_train: Inetger, number of training samples each provider has
+    #   n_devices: Integer, number of devices
+    #   n_train_list: List of integers, number of training samples of each device
     #   n_val: Inetger, number of validation samples used to compute utility
-    #   n_test: Integer, number of hold-out testing samples
+    #   n_test: Integer, number of held-out testing samples
     #   batch_size: batch size of data loader
     #   rd_seed: Integer, random seed
     # Return:
@@ -24,7 +24,7 @@ def data_prepare(dataset_name, n_devices, n_train, n_val, n_test, batch_size=5, 
 
     # load the traning set
     if dataset_name == "MNIST":
-        data_path = 'data/mnist/'
+        data_path = '../data/mnist/'
         transform_data = datasets.MNIST(
             data_path, train=True, download=True,
             transform=transforms.Compose([
@@ -33,7 +33,7 @@ def data_prepare(dataset_name, n_devices, n_train, n_val, n_test, batch_size=5, 
                 transforms.Normalize((0.1307),(0.3081))
             ]))
     elif dataset_name == "KMNIST":
-        data_path = 'data/kmnist/'
+        data_path = '../data/kmnist/'
         transform_data = datasets.KMNIST(
             data_path, train=True, download=True,
             transform=transforms.Compose([
@@ -42,7 +42,7 @@ def data_prepare(dataset_name, n_devices, n_train, n_val, n_test, batch_size=5, 
                 transforms.Normalize((0.1918),(0.3483))
             ]))
     elif dataset_name == "FMNIST":
-        data_path = 'data/fmnist/'
+        data_path = '../data/fmnist/'
         transform_data = datasets.FashionMNIST(
             data_path, train=True, download=True,
             transform=transforms.Compose([
@@ -51,14 +51,13 @@ def data_prepare(dataset_name, n_devices, n_train, n_val, n_test, batch_size=5, 
                 transforms.Normalize((0.2861),(0.3530))
             ]))
     elif dataset_name == "CIFAR10":
-        data_path = 'data/cifar10/'
+        data_path = '../data/cifar10/'
         transform_data = datasets.CIFAR10(
             data_path, train=True, download=True,
             transform=transforms.Compose([
                 transforms.Grayscale(),
                 transforms.ToTensor(),
-                #transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-                transforms.Normalize((0.5), (0.5))
+                transforms.Normalize((0.5),(0.5))
             ]))
 
     devices_train_list = []  # list of training data for devices
@@ -115,7 +114,7 @@ def data_prepare(dataset_name, n_devices, n_train, n_val, n_test, batch_size=5, 
     # Choose test data
     # load the test set
     if dataset_name == "MNIST":
-        data_path = 'data/mnist/'
+        data_path = '../data/mnist/'
         transform_data = datasets.MNIST(
             data_path, train=False, download=True,
             transform=transforms.Compose([
@@ -124,7 +123,7 @@ def data_prepare(dataset_name, n_devices, n_train, n_val, n_test, batch_size=5, 
                 transforms.Normalize((0.1307),(0.3081))
             ]))
     elif dataset_name == "KMNIST":
-        data_path = 'data/kmnist/'
+        data_path = '../data/kmnist/'
         transform_data = datasets.KMNIST(
             data_path, train=False, download=True,
             transform=transforms.Compose([
@@ -133,7 +132,7 @@ def data_prepare(dataset_name, n_devices, n_train, n_val, n_test, batch_size=5, 
                 transforms.Normalize((0.1918),(0.3483))
             ]))
     elif dataset_name == "FMNIST":
-        data_path = 'data/fmnist/'
+        data_path = '../data/fmnist/'
         transform_data = datasets.FashionMNIST(
             data_path, train=False, download=True,
             transform=transforms.Compose([
@@ -142,13 +141,13 @@ def data_prepare(dataset_name, n_devices, n_train, n_val, n_test, batch_size=5, 
                 transforms.Normalize((0.2861),(0.3530))
             ]))
     elif dataset_name == "CIFAR10":
-        data_path = 'data/cifar10/'
+        data_path = '../data/cifar10/'
         transform_data = datasets.CIFAR10(
             data_path, train=False, download=True,
             transform=transforms.Compose([
                 transforms.Grayscale(),
                 transforms.ToTensor(),
-                transforms.Normalize((0.5), (0.5))
+                transforms.Normalize((0.5),(0.5))
             ]))
     
     sample_order = np.arange(len(transform_data))
@@ -166,11 +165,12 @@ def data_prepare(dataset_name, n_devices, n_train, n_val, n_test, batch_size=5, 
     return devices_train_list, val_loader, test_loader
 
 if __name__ == '__main__':
-    n_devices = 100
-    n_train = 400
+    n_devices_list = [50, 100, 200, 400]
+    n_train = 100
     n_val = 1000
     n_test = 10000
     for dataset_name in ['MNIST', 'KMNIST', 'FMNIST', 'CIFAR10']:
-        devices_train_list, val_loader, test_loader = data_prepare(dataset_name, n_devices, n_train, n_val, n_test, batch_size=5, rd_seed=111)
-        with open('data/' + dataset_name.lower() + '/corrupted_data_ndevices=' + str(n_devices) + '.pickle', 'wb') as f:
-            pickle.dump((devices_train_list, val_loader, test_loader), f)
+        for n_devices in n_devices_list:
+            devices_train_list, val_loader, test_loader = data_prepare(dataset_name, n_devices, n_train, n_val, n_test, batch_size=5, rd_seed=111)
+            with open('data/' + dataset_name.lower() + '/corrupted_data_ndevices=' + str(n_devices) + '.pickle', 'wb') as f:
+                pickle.dump((devices_train_list, val_loader, test_loader), f)

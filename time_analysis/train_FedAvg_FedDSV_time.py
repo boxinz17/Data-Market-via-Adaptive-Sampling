@@ -4,21 +4,24 @@ import torch.nn as nn
 import torch.nn.functional as F
 import pickle
 import time
-from util import *
 import sys
+
+sys.path.append('../')
+from util import *
+
 
 # read the input random seed index
 i_rand = int(sys.argv[1])
 
 # the name of dataset and the number of providers
-dataset_name = 'CIFAR10'  # acceptable variables are ['MNIST', 'KMNIST', 'FMNIST', 'CIFAR10']
-n_providers = 100
+dataset_name = 'MNIST'  # acceptable variables are ['MNIST', 'KMNIST', 'FMNIST', 'CIFAR10']
+n_providers = 50  # we choose n_providers=50, 100, 200, 400 in the paper
 
 print('dataset: {}'.format(dataset_name))
 print('n_providers: {}'.format(n_providers))
 
 # load the random seed array
-with open('rd_seed_array.pickle', 'rb') as f:
+with open('../rd_seed_array.pickle', 'rb') as f:
     rd_seed_array = pickle.load(f)
 
 # load the data
@@ -29,13 +32,9 @@ step_size_local = 0.1  # step size for local updates
 step_size_global = step_size_local  # step size for global updates
 n_epoch = 1  # number of epochs for local computation of each round
 batch_size = int(0.1 * n_providers)  # number of providers chosen in each communication round
+n_commun = 500  # number of communications
 c_tol = 0.05  # convgernece tolerance to decide if DSV has converged
 back_check = 10  # the gap to check convergence of DSV
-
-if dataset_name == 'CIFAR10':
-    n_commun = 1000  # number of communications
-else:
-    n_commun = 500  # number of communications
 
 # set up random seed
 print("random seed: {}".format(rd_seed_array[i_rand]))
