@@ -2,7 +2,11 @@
 
 ## Introduction
 
-This repo aims to provide the code and instructions to reproduce the experimental results in the paper *Boxin Zhao, Boxiang Lyu, Raul Castro Fernandez. Mladen Kolar. Addressing Budget Allocation and Revenue Allocation in Data Market Environment Using an Adaptive Sampling Algorithm. International Conference on Machine Learning, 2023.* Please refer the paper for more details.
+This repo aims to provide the code and instructions to reproduce the experimental results in the following paper 
+
+> *Boxin Zhao, Boxiang Lyu, Raul Castro Fernandez. Mladen Kolar. Addressing Budget Allocation and Revenue Allocation in Data Market Environment Using an Adaptive Sampling Algorithm. International Conference on Machine Learning, 2023.* 
+
+Please refer the paper for more details.
 
 ## Preparation
 
